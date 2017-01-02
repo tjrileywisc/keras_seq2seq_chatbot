@@ -12,7 +12,7 @@ these seem to be from movie screenplays actually.
 
 ## Models
 
-Several models are provided:
+Several models are (*will be*) provided:
 - seq2seq
 - seq2seq with attention
 - seq2seq with additional pos tags as another set of input features
