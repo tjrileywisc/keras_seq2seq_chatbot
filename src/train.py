@@ -1,6 +1,4 @@
 
-# pylint: disable=C0103
-
 import spacy
 import numpy as np
 
@@ -37,9 +35,10 @@ def get_features(docs, max_length):
     """
     turn input docs into onehot encoded vectors
     """
-    Xs = np.zeros((len(list(docs)), max_length), dtype='int32')
+    docs = list(docs)
+    Xs = np.zeros((len(docs), max_length), dtype='int32')
     for i, doc in enumerate(docs):
-        for j, token in enumerate(doc):
+        for j, token in enumerate(doc[:max_length]):
             Xs[i, j] = token.rank if token.has_vector else 0
     return Xs
         
@@ -74,7 +73,12 @@ embedded_sequences = Embedding(embeddings.shape[0],
 encoder = LSTM(128, return_sequences = True)(embedded_sequences)
 encoder = LSTM(128)(encoder)
 
-repeat = RepeatVector(MAX_SEQ_LEN)(encoder)
+though_vector = RepeatVector(MAX_SEQ_LEN)(encoder)
+
+decoder = LSTM(128, return_sequences = True)(though_vector)
+decoder = LSTM(128)
+
+
 
 model = Model(input = sequence_input, output = repeat)
 model.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
